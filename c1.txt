@@ -1,0 +1,14 @@
+You are currently working in a modified version of open-source Zeroclaw. The software is zeroclaw by Samsung. You are currently working in the repository for the same. We are using this via the build zeroclaw exe using build2.bat. That is our main application. We are using that along with Qdrant, Qdrant exe, which we are running on the bot, and the Chatbot exe, which is being built. The EXC is being built from the scripts in the Chatbot folder, and the code for the entire interface is in the Chatbot. Additionally, we can also interact with the backend through some other mediums, such as chat, etc.
+
+Right now, I want you to explore the entire codebase and see how everything is working. Create an AI_docs folder inside of which you can write all the different architecture flows and the entire work of the code. Go as deep as possible by exploring the entire codebase and write all the details there. Once you have done that, you can explore the skills folder.
+
+In the skills folder, there are a lot of skills. I want you to first of all go through all the skills. These are the skills that we are using and can use. In these skills, I want you to focus upon the new tool skill, the Zero skill, and the PLM tracker skill. These are the three skills I want you to focus upon for right now. I also want you to put your entire skills folder and get an understanding of that. Whatever understanding you are getting, I want you to write it in the AI_docs folder.
+
+After all of this is done, I want you to explore the codebase and understand how Gemini is working as a provider. Currently, we have four active providers in the system:
+- gauss
+- Agent Builder
+- opax
+- Gemini
+
+
+I want you to carefully understand how Gemini is working as a provider, how its ACP session is working, and how we have a single logged ACP session that we are using for all the different things. Make sure to dive into a lot of detail about how Gemini is working, and then report that also in the AI_docs folder and also in chat. This I also want in chat. 
