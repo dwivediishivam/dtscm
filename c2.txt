@@ -1,0 +1,105 @@
+See the new folder as well, and also carefully read and understand the entire code inside of that as well.
+
+That is:
+1. a server, an MCP server
+2. a browser extension
+
+
+Both of these will be installed on the user's PC. The purpose of both of these is so that their browser can also be controlled by the Declo system.
+
+Read that the extension would be loaded as an unpacked extension inside of the browser itself, and then the server would be initiated anywhere on the system. These two things would also be working with the dclaw system as well, so both things would be working and 
+Be live there as well. That is just an additional thing that we have, other than all the other things.
+
+After you have completed understanding that, II have a major task and a major reform that I want to do in the system. It's a multi-part task, so I'll just start by describing all the changes. What I want you to do is, based on all of these changes, understand the entire codebase (you already understood it), but understand further where all changes need to be made, and then come up with a plan to make all of these changes. I'll see the plan, but have proper details of how to do it, where to do it, what to do in the exact code, and the flow of it. Tell me both, and based on that, I'll decide how to proceed.
+
+Here's what I want to do. In the UI, we have a section pinned. In the pinned section right now, we have "Pinned" and "Initiated by Declod Chat," which is working on a WebSocket and shows the initiated-by-Declod chats to us.
+
+First of all, what I want is another tab over there. This secondary tab will be named "Opening this now." This is brief. Here, the developer or the user will be able to see what all tasks they have to do, or some sort of a to-do list kind of a thing, and a few other things as well, which I'll get into in depth in the coming moments.
+
+What this will be doing is this: the server that I had, I want it placed in a fixed position inside of ZeroCLo. This server will always be placed in a particular position. We'll send it to the user ourselves. In our system, I'll put it myself. All the things, like the main application, the chatbot, and the qdrant, we are shipping to the user as part of an installer. Similarly, we'll ship the server as well. We'll place it in the .0/workspace/browser_server folder. That is where we'll place this code for the server directly.
+
+The extension would be loaded onto the users' systems only. In the paths for any of the skills that are using it, the code is hardcoded to that particular location, which is the user's location. As in, not hard-coded, but soft-coded, where it's going to the user and then, inside of it, the Zero Flow and workspace. Whenever they start it, this entire browser thing is automatically configured. In the Windows setup, we will already send them the browser extension, which will be auto-installed on Edge, and the rest will be over there. Make sure that works inbuilt for the users. 
+Now, coming back to the 
+Main now brief thing that I was talking about.
+
+What I want to do is this: this is something that would run every hour. In this thing, I want to collect a few things:
+- All the Jiras of the user
+- All the PLMs of the group, especially highlighting the ones that are of the user
+- All the emails of the user
+
+
+This email is for the email-to-do generator skill, and you have a skill for Jira and a skill for PLM tracking. Combine all of that, and these skills would be on the user system, but they might not be there because the skills folder is connected to a hub, a sort of thing that the user can download. This functionality of the now brief, I want to get built into the application itself without the need for any external skills. I want you to utilize the code from the three skills and code it inside the main application itself, so they don't have to install anything else in order to get this brief.
+
+What will happen is that this will be running every hour. That means we'll be updating the PLM, updating Jira, and updating the emails. As of right now, we have some columns in the To Do generator itself. Similarly, we'll have columns for all three, and we can also add a few more things later on.
+
+Inside the workspace folder of the user, we'll create a few JSONs:
+- email JSON
+- To Do JSON
+- Jira JSON
+- PLM JSON
+
+
+We can have them in a new folder there. Inside the emails one, whichever emails are being passed would be put there.
+
+I wanted to run RLE, but a lot of times it might not run due to some issues over there. If it's not running, if it's not successful, the entire job, I want to retry after 15 minutes. If the R is passed, then I want to retry, of course, after an hour.
+
+For the G9 PLM, whatever columns we have in the JSON, if any of them are updated, then there is an update, but that will be fetching the entire thing. For the emails, we will be fetching from the last time. When we are reading the emails, I want to read till the last email that we had in the JSON so that we don't miss any email.
+
+Let's suppose, technically, it's only going to be running as it is running every hour, so it will be only reading emails for the hour. Sometimes it might miss or not run, or whatever, as we have that thing. If a run is not running for whatever reason, 15 minutes later it can be retried. If that 15 minutes later is less than a 5-minute gap to the next run itself, then we'll cancel that run so that the runs don't pile up.
+
+Let's suppose we started a run, it took 12 minutes, 14 minutes, and then we waited for 15 minutes. Again, it took 12 minutes to run and then failed. The next 15 minutes, it will not be running because then we'll be too close to the next run itself. If we complete it within 55 minutes, then it's good. Otherwise, no go for that run.
+
+Actually, let's keep it that the last run has to be within 45 minutes of the initiated time. Otherwise, cancel that run. No error message or anything for that.
+
+It's now brief. It keeps on updating. It's "last updated" or something like that, which can be displayed on the Now Brief page, and there is a refresh button. If the user wants to manually refresh, it will run the job manually.
+
+If they run the job manually, it will restart the cycle of the hourly updates. Let's suppose right now hourly updates happen at 9, 10, and 11. If it restarts at 9:34, then the cycle restarts at 9:34: 10:34, 11:34, whatever, if they manually click refresh. Again, what I was talking about is that I want to retrieve the information fromFrom the various systems now in emails. What this will do is, based on all three pieces of information that are collected (that is, the Jira conference and the email database), it needs to  
+Create a to-do list for those pieces of information. This to-do list will be ranked on the basis of priority, similar to how it was happening in the email to-do generator. For example, in the case of PLM, if it's assigned to you, that will be one of the highest-priority to-dos there.
+
+All of these to-dos will be displayed in the Now Brief section. I want the Now Brief section to look like this: once the user opens it, they have a beautiful table of the to-dos and the source of how that to-do was generated.
+- The to-do name should not be there. It should be a Now Brief word itself, or just Now or Declon Now. Declon Now can be the word that we can use over there, or some sort of symbolism for that.
+- Beneath it, whatever the task is, similar to email, we have a few columns in that, and then have assignees, priority, and the source of it.
+- In the case of Jira and PLM, we can have the link. In the case of email, where we can't have the link, have the subject so that it can be traced. Subject and sender, maybe source, can also be there.
+- There can be one source type, which is basically email, Jira, and PLM, and the link as well can be there in this thing.
+- There can be a tab to view the email, Jira, and PLM separately as well. That is just viewing these three things, the updates of the three, separately.
+- When we have more things, it can go on and have more things as well in this Now Brief.
+- I also want a tick box kind of thing where, if a task is done, I can just click it, and then that task is done. I don't want that to be shown in my Now Brief for today. I want it to be ticked and then crossed. The text should be strikethrough, or the box should be strikethrough, or something like that, grayed out, strikethrough, or something like that, or both. From the next day, I don't want to see that.
+- In the case of Jira or PLM, let's suppose I mark a Jira as done in my to-do thing. Of course, that Jira is going to be fetched again. If there is no update on the Jira side, then we have to leave it as it is. If there is some update from the Jira side, like if it's, let's suppose, in review and then it's back to in progress or something like that, then that should be shown again as a thing to do. This part is going to be handled by the AI.
+
+
+Again, I forgot to mention this earlier, but one of the major things is that all of this is going to be kind of a prompt. You have to write a detailed prompt that would be sent to the AI, which will then call the skill, generate all the files, and then generate the details for the Now Brief. If it's not a static thing, because the to-do in itself is AI-generated, and a lot of these decisions are going to be AI as well (because every time Jira will have a different kind of text and then show that again, or not show that again), those are decisions that AI has to take. It's some sort of an AI prompt that you'll be sending to the provider, whichever provider is set in the chatbot. That provider is going to be used in order to get the Now Brief as well.
+
+In the case of agent builder, GOS, and Opex, it is simple: just use that provider. If Gemini is set right now as the provider in Chatbot, then I want to do a different thing because right now we only have a single Gemini ACP session. If I generate this Now Brief from the same Gemini ACP session, it will take a lot of time in that, and then the user won't be able to use normal chat during that time. For Gemini, if it is there, I want an additional Gemini ACP session that is also always open. Don't have it so that it has to be created every hour, because then it will waste time. It's a secondary Gemini session, which, in any user 
+It will be created the first time they initialize with Gemini. That would be there in the chat for the now brief itself.
+
+Again, as I have already described, it's going to be an AI feature, so all the things to do and everything will be generated via the AI capabilities themselves.
+
+Now, a few other things:
+- Every chat is tracked in the KPI database. How it's tracked is: if it's coming from the chat (what is like a GW chat), it's GW-chat ID. If it's coming from M chat, it's M-chat ID. If it's coming from this other system, the new system, whichever model it is, it also needs to be tracked for all the different things the LLM called message in and message out. In that case, it will be now- and then some kind of an ID.
+- Initiated by DCLow has a particular slug for the ID and the UI as well. Similarly, brief will also have a slug like now-brief, which will be used for both the chat ID and the slug kind of the thing as well.
+- Of course, we'll have to get the entire prompt and everything beforehand, based on which the system will be running. You'll have to write that for whatever things are there, based on which the entire system would run.
+- When we open the now-brief, the main thing would be seeing all the different to-do things, and then there is an option to just see the emails, the Jira to-dos, or the PLM to-dos, kind of like a toggle. Let's say in the top right. For now, we can have it similar to the UI of how the plan, ask, and active UI is there. Similarly, we can have it for all these three, and of course, all or the main home things, so four things are there technically.
+- In these two to-dos, on the left-hand side, there will be a checkbox. On the right-hand side, there will be a cross button. The checkbox thing will mark it as done. How it will be done is like in the case of emails: if I have marked it as done, it will show till the end of the day. It will show that this email, this to-do, was there, it will be crossed and grayed out like the task, and it will be at the bottom now because it's done. It will shift to the bottom. At the bottom, of course, it will be sorted in the priority order itself still, but it will go down because I have marked it as done. In the case of emails, I'll show it till the end of the day, and then we'll have it go away from the next day. We won't show it to the user.
+- For emails, how I want the emails to come is, again, whenever we are running it, till the last time that was run or the last email that was fetched. Till the time we fetch the same email or we get to that timestamp, not the same email, maybe that email is gone, so don't have that logic. Someone might delete the email or whatever. Till that time has passed, the last time, till then we will see the emails and then append to the email, say, one thingy. Gena and PLM are, of course, not time-dependent like that. Of course, all of them would come when we do that. That will be the thing for this thing.
+- Of course, we'll also need to delete the main emails, Gena, and PLM, mainly emails, after. The plan is to delete them after a week. In the JSON, have an ID which is going to be linked to the to-do and then to the email, Gena, and the PLM, so that it can be mapped like that. If, after a week, a task has been done and/or crossed out, then we can remove it from the email JSON as well. If it's still an active to-do, of course, we still want to keep the email. If it's never a part of the to-do, then of course leave it.
+- The cross button is basically for if something is not relevant. If I click cross, then that would be immediately removed from the UI, from the JSON. We still won't remove it. We'll have two variables: the cross variable and the checkbox for done or not done. Cross will remove it from the UI immediately and mark that in the JSON, of course, on the backend.
+
+
+The two JSONs are, of course, completely generated by AI, and the other three are programmatically coming from the different systems. That's email, Gena, and PLM, programmatically coming from the systems, right? Now, how is the stuff being generated for all of this? 
+Now, in the case of Jira and PLM, what will it have? If it's marked done, then it's marked done. If, let's suppose, an update comes on Jira or PLM, or if there is no update on Jira or PLM and it's the same exact text on the same exact thing, then it will remain crossed out for the day. If it's marked done, then it gets removed. If it's crossed out, then it will not show until any update comes, and then it will show again with a little update tag.
+
+I just want to put a little update tag if there is some update on Jira or PLM, and then again, an unknown to-do might be generated. If the AI thinks that a to-do should be generated, then it should be generated with that update tag. On clicking on that update, because we have the last as well and we have the current as well, it should just see what change has been made by clicking on that small update tag or something like that.
+
+Of course, an email won't be there because it's going to be a new email only. If we cross it out, it can again pop up if we feel like it's marked done. If we cross it out, it can also again pop up based on whether there is an update. I don't want to share unless and until there is no update. Cross it out, remove it from the UI, and then mark it done. Show the end, and then remove it from the UI.
+
+I have already talked about when I want to run this now. Of course, I want to run it. Seriously, every time the AI only receives any updated Jira, PLM, or any new emails, and the intellect to-do as well, it fetches any updated Jira or PLM. Based on that, it appends the thing. Of course, I don't want to append the text for the earlier things as well. There should be some safeguard that doesn't generate the entire text again and again from the AI in case emails only have new ones and in updates that.
+
+Now, if you want, we can also run the script first and then send the output of the script, because we know what we are running in the script. We can then send that one prompt to AI, which will generate the to-do instead of having the entire thing run as a skill. Right now, we don't need to know what we are running in the case of a chatbot the user might have asked for, and then it might be running that, but here we already have it. Run the script, then all the outputs and everything go to the AI, and then that creates the to-do.
+
+Based on all the different features that I have listed, that's sort of what I want: the now brief tool, the right-to-do thing. It's just now Declon. That's what the name is. It's not a to-do or something like that. The left side would be the checkbox, the right side would be the cross to remove any of the things, and in the middle we have rows similar to what we have in the email to-do right now. Only make the UI beautiful because you are creating the UI itself. Have AI, of course, output the to-do in the JSON format, append to the JSON, and then, based on that, show in the UI whatever needs to be shown.
+
+Again, I want this all to be happening from the moment anyone starts the Declon, or whatever the default provider is set up as. Start with that. Whenever they switch it in the chatbot, that provider should be used. Whenever they first use Gemini, the second session should be there. That should be there for all now briefs. The main session should never be used for the Gemini CP, just so that we can preserve whatever time this creation part is taking. We can preserve that by not showing all of that there.
+
+This is all I want. Also, make this thing dynamic because later I'll also want to add more systems. Just leave the code open to that because we will have more systems and things that will be added, and even some things that will be outside of this table and will be generated from the file, and then we'll have it outside of the table. That's just something for the future, but don't think about it too much for now.
+
+These are the main things that I want you to do. Again, think about how this can be done and present the plan to me. If you have any doubts, ask me the questions, list the questions, and I'll answer them. Then present the exact plan of how this can be implemented. 
