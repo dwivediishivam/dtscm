@@ -1,0 +1,3 @@
+Remove-Item Env:NODE_EXTRA_CA_CERTS -ErrorAction SilentlyContinue
+$env:NODE_TLS_REJECT_UNAUTHORIZED = "0"
+gemini
